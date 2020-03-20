@@ -33,13 +33,13 @@ class Loader {
         container.style.opacity = "0";
 
         container.addEventListener(this.transitionEndEventName, (e) => {
-            if (e.target.style.opacity == "1") {
+            if (e.target.style.opacity === "1") {
                 // show animation finished
                 if (this.loaders.length >= this.elements.length && this.options.afterShow && !this.afterShowFired) {
                     this.options.afterShow();
                     this.afterShowFired = true;
                 }
-            } else if (e.target.style.opacity == "0") {
+            } else if (e.target.style.opacity === "0") {
                 // hide animation finished
                 this.loaders.shift();
                 this.elements.shift();
@@ -64,7 +64,7 @@ class Loader {
         if (options && options.elements) {
             if (options.elements.length > 1) {
                 Array.from(options.elements).map((elem) => {
-                    this.elements.push(elem);
+                    return this.elements.push(elem);
                 });
             } else if (options.elements instanceof HTMLElement) {
                 this.elements.push(options.elements);
@@ -76,51 +76,29 @@ class Loader {
         this.elements.map((element) => {
             var loader = this.create_loader();
 
-            if (element.tagName.toLowerCase() == 'body') {
-                loader.style.top = '0';
-                loader.style.left = '0';
-                loader.style.width = '100%';
-                loader.style.height = '100%';
+            if (!element.style.position) {
+                element.style.position = 'relative';
+            }
+
+            loader.style.top = '0';
+            loader.style.left = '0';
+            loader.style.width = '100%';
+            loader.style.height = '100%';
+
+            if (element.tagName.toLowerCase() === 'body') {
                 loader.style.position = "fixed";
             } else {
-                loader.style.top = element.offsetTop + 'px';
-                loader.style.left = element.offsetLeft + 'px';
-                loader.style.height =
-                    px2int(getComputedStyle(element).getPropertyValue("height")) +
-                    px2int(
-                        getComputedStyle(element).getPropertyValue(
-                            "border-top-width"
-                        )
-                    ) +
-                    px2int(
-                        getComputedStyle(element).getPropertyValue(
-                            "border-bottom-width"
-                        )
-                    ) + 'px';
-                loader.style.width =
-                    px2int(getComputedStyle(element).getPropertyValue("width")) +
-                    px2int(
-                        getComputedStyle(element).getPropertyValue(
-                            "border-left-width"
-                        )
-                    ) +
-                    px2int(
-                        getComputedStyle(element).getPropertyValue(
-                            "border-right-width"
-                        )
-                    ) +
-                    "px";
                 loader.style.position = "absolute";
-
-                loader.style.padding = getComputedStyle(element).getPropertyValue("padding");
             }
 
             this.loaders.push(loader);
-            document.querySelector("body").append(loader);
+            element.append(loader);
             
             setTimeout(() => {
                 loader.style.opacity = "1";
             }, 50);
+
+            return true;
         });
     };
 
@@ -133,9 +111,9 @@ class Loader {
         }
         if (this.loaders) {
             this.loaders.map((element) => {
-                setTimeout(() => {
+                return (setTimeout(() => {
                     element.style.opacity = "0";
-                }, 50);
+                }, 50));
 			});
 		}
 	}
@@ -154,7 +132,7 @@ function getTransitionEndEventName() {
     }
     let bodyStyle = document.body.style;
     for(let transition in transitions) {
-        if(bodyStyle[transition] != undefined) {
+        if(bodyStyle[transition] !== undefined) {
             return transitions[transition];
         } 
     }
