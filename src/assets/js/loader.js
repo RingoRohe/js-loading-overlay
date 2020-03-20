@@ -17,7 +17,6 @@ class Loader {
     }
 
     create_loader() {
-        console.log('loader created');
         let container = document.createElement("div");
         container.classList.add(this.options.backgroundClass);
         container.style.transition = 'all 200ms';
@@ -33,11 +32,35 @@ class Loader {
 
         container.style.opacity = "0";
 
+        container.addEventListener(this.transitionEndEventName, (e) => {
+            if (e.target.style.opacity == "1") {
+                // show animation finished
+                if (this.loaders.length >= this.elements.length && this.options.afterShow && !this.afterShowFired) {
+                    this.options.afterShow();
+                    this.afterShowFired = true;
+                }
+            } else if (e.target.style.opacity == "0") {
+                // hide animation finished
+                this.loaders.shift();
+                this.elements.shift();
+                if (this.options.afterHide && this.loaders.length < 1 && !this.afterHideFired) {
+                    this.options.afterHide();
+                    this.afterHideFired = true;
+                }
+                e.target.remove();
+            }
+        });
+
         return container;
     }
 
     show(options) {
         this.afterShowFired = false;
+        if (options && options.after && typeof options.after == "function") {
+            this.options.afterShow = options.after;
+        } else {
+            this.options.afterShow = null;
+        }
         if (options && options.elements) {
             if (options.elements.length > 1) {
                 Array.from(options.elements).map((elem) => {
@@ -94,46 +117,25 @@ class Loader {
 
             this.loaders.push(loader);
             document.querySelector("body").append(loader);
-
-            if (options && options.after && typeof options.after == "function") {
-                if (this.loaders.length >= this.elements.length) {
-                    loader.addEventListener(this.transitionEndEventName, () => {
-                        console.log("show fired");
-                        if (!this.afterShowFired) {
-                            options.after();
-                            this.afterShowFired = true;
-                        }
-                        loader.removeEventListener(this.transitionEndEventName, null );
-                    });
-                }
-            }
             
             setTimeout(() => {
                 loader.style.opacity = "1";
-            }, 10);
+            }, 50);
         });
     };
 
     hide(options) {
         this.afterHideFired = false;
+        if (options && options.after && typeof options.after == "function") {
+            this.options.afterHide = options.after;
+        } else {
+            this.options.afterHide = null;
+        }
         if (this.loaders) {
             this.loaders.map((element) => {
-                element.addEventListener(this.transitionEndEventName, () => {
-                    this.loaders.shift();
-                    this.elements.shift();
-                    if (options && options.after && typeof options.after == "function") {
-                        if (this.loaders.length < 1 && !this.afterHideFired) {
-                            options.after();
-                            this.afterHideFired = true;
-                        }
-                    }
-                    element.removeEventListener(this.transitionEndEventName, null);
-                    element.remove();
-                });
-
                 setTimeout(() => {
                     element.style.opacity = "0";
-                }, 10);
+                }, 50);
 			});
 		}
 	}
