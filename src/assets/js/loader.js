@@ -119,10 +119,6 @@ class Loader {
 	}
 }
 
-function px2int(string) {
-    return parseInt(string.replace('px', ''));
-}
-
 function getTransitionEndEventName() {
     var transitions = {
         "transition"      : "transitionend",

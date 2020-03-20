@@ -9,11 +9,11 @@ document.querySelector('#show3').addEventListener('click', (e) => {
     e.preventDefault();
     ldr.show({
         after: function() {
-            alert('show after fired');
+            alert('loader showed');
             window.setTimeout(function () {
                 ldr.hide({
                     after: () => {
-                        alert('hide after fired');
+                        alert('loading finished');
                     }
                 });
             }, 3000);

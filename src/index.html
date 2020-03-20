@@ -3,57 +3,51 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="assets/scss/main.scss">
-	<title>jQuery Loader Plugin Demo</title>
+	<title>Javascript Loader Plugin Demo</title>
 </head>
 <body>
-	<h1>jQuery loader plugin</h1>
-	<p>This is a simple JS module for managing a loading icon.</p>
+	<h1>JS loader plugin</h1>
+	<p>This is a simple JS module to add a loading overlay to one or more Elements.</p>
 	<h2>basic usage</h2>
-	<pre><code>var ldr = $.loader({
-	image: 'loader_black.gif'
+	<pre><code>const ldr = new Loader({
+    image: './img/loding.gif'
 });
 
-ldr.show();</code></pre>
+document.querySelector('.yourElement').addEventListener('click', (e) => {
+    e.preventDefault();
+    ldr.show();
+})</code></pre>
 	<p>You can pass an options object to the plugin with several parameters. At the momente these parameters are:</p>
 	<ul>
 		<li>image - (url of an image)</li>
 		<li>backgroundClass - (class of the background element)</li>
 		<li>loaderClass - (the class name of the loader element)</li>
 	</ul>
-	<p>You can also pass a options object to the show and hide function that can contain pretty neat things like</p>
+	<p>You can also pass a options object to the show and hide function that can contain the following values</p>
 	<ul>
 		<li>elements - a jQuery object (or a array of objects) that will be overlayed by the loader</li>
 		<li>after - a function that will be executet right after the function finishes</li>
 	</ul>
 	<h2>Example</h2>
-	<pre><code>var ldr = $.loader({
-	image: 'loader_black.gif'
+	<pre><code>const ldr = new Loader({
+	image: './img/loding.gif'
 });
 
-ldr.show({
-	elements: [$('body'), $(#myElement)],
-	after: function() {
-		window.setTimeout(
-			function() {ldr.hide();},
-			3000
-		);
-	}
-});</code></pre>
-	<p>or a little more complex:</p>
-	<pre><code>var ldr = $.loader({
-	image: 'loader_black.gif'
-});
-
-ldr.show({
-	elements: $('pre'),
-	after: function() {
-		window.setTimeout(function() {
-			ldr.hide({
-				after: function() {alert('finished loading');}
-			});
-		}, 3000);
-	}
-});</code></pre>
+document.querySelector('.yourElement').addEventListener('click', (e) => {
+    e.preventDefault();
+    ldr.show({
+        after: function() {
+            alert('loader showed');
+            window.setTimeout(function () {
+                ldr.hide({
+                    after: () => {
+                        alert('loading finished');
+                    }
+                });
+            }, 3000);
+        }
+    });
+})</code></pre>
 
 	<h2>Demo</h2>
 	<a name="demo" href="#" id="show3">show loader for 3 Seconds</a> or <a href="#" id="showPre">show loader on all codeblocks</a>
