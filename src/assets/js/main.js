@@ -9,7 +9,6 @@ document.querySelector('#show3').addEventListener('click', (e) => {
     e.preventDefault();
     ldr.show({
         after: function() {
-            alert('loader showed');
             window.setTimeout(function () {
                 ldr.hide({
                     after: () => {
@@ -26,11 +25,10 @@ document.querySelector("#showPre").addEventListener("click", e => {
     ldr.show({
         elements: document.querySelectorAll("pre"),
         after: function() {
-            alert("show after fired");
             window.setTimeout(function() {
                 ldr.hide({
                     after: () => {
-                        alert("hide after fired");
+                        alert("loading finished");
                     }
                 });
             }, 3000);
